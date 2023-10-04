@@ -5,30 +5,21 @@ MAINTAINER Chandra Lefta <lefta.chandra@gmail.com>
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -y update
-RUN apt-get install -y iproute2 sudo nfs-common \
+RUN apt-get install -y iproute2 sudo nfs-common fuse bindfs \
                        apache2 apache2-utils
+RUN apt clean
 
-RUN groupadd -g 6565 pxeboot
-RUN useradd -d /home/pxeboot -ms /bin/bash pxeboot -u 6565 -g 6565
-RUN usermod -a -G www-data pxeboot
-RUN usermod -a -G root pxeboot
-RUN usermod -aG sudo pxeboot
-RUN passwd -d pxeboot
-RUN echo 'pxeboot ALL=(ALL) ALL' >> /etc/sudoers
-
-RUN apt clean 
-
-ENV NAME pxeboot
-ENV HOME /home/pxeboot
-
-WORKDIR /home/pxeboot
-
-VOLUME /home/pxeboot
+RUN groupadd -g 6565 pxeadmin
+RUN useradd -d /home/pxeadmin -ms /bin/bash pxeadmin -u 6565 -g 6565
+RUN usermod -aG www-data pxeadmin
+RUN usermod -aG sudo pxeadmin
+RUN passwd -d pxeadmin
+RUN echo 'pxeadmin ALL=(ALL) ALL' >> /etc/sudoers 
 
 EXPOSE 80
 
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+ADD httpd.sh /httpd.sh
+RUN chmod +x /httpd.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/httpd.sh"]
 CMD ["eth0"]
