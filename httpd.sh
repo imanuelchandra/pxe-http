@@ -47,7 +47,7 @@ init(){
 start(){
 init
 
-sudo apachectl -D FOREGROUND
+sudo apachectl -D FOREGROUND -e debug
 
 }
 

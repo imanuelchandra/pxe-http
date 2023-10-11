@@ -11,7 +11,7 @@ build_pxe_http:
 
 .PHONY: run
 run_pxe_http:
-	docker run -it --rm --privileged=True --init --user 6565:6565 --net host \
+	docker run -it --rm --privileged --init --user 6565:6565 -p 80:80 --net host \
 	    	-v ./config:/config \
 			-v ./log:/log \
 			-v ./scripts:/scripts \
